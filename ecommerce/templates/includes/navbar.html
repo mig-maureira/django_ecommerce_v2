@@ -49,7 +49,7 @@
                 <i class="fas fa-shopping-bag fa-lg"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                     id="cart-counter">
-                    0
+                    {{ total_items|default:"0" }}
                 </span>
             </button>
 
@@ -131,45 +131,83 @@
 
 <!-- 8. OFFCANVAS CARRITO DE COMPRAS -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
-    <div class="offcanvas-header">
+    <div class="offcanvas-header border-bottom">
         <h5 class="offcanvas-title" id="cartOffcanvasLabel"><i class="fas fa-shopping-bag me-2"></i>Tu Carrito</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body">
 
+    <div class="offcanvas-body">
         {% if carrito %}
         {% for key, item in carrito.items %}
-        <div>
-            <p>{{ item.nombre }}</p>
-            <p>{{ item.cantidad }}</p>
 
-            <a href="{% url 'agregar_al_carrito' key %}">+</a>
-            <a href="{% url 'restar_del_carrito' key %}">-</a>
-            <a href="{% url 'eliminar_item' key %}">Eliminar</a>
+        <div class="cart-item d-flex mb-3 align-items-center">
+
+            {% if item.imagen %}
+            <img src="{{ item.imagen }}" alt="{{ item.nombre }}" class="cart-item-img me-3"
+                style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
+            {% else %}
+            <img src="https://via.placeholder.com/70" alt="{{ item.nombre }}" class="cart-item-img me-3"
+                style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
+            {% endif %}
+
+            <div class="cart-item-details flex-grow-1">
+                <h6 class="cart-item-title mb-1">{{ item.nombre }}</h6>
+                <span class="cart-item-price text-terracota fw-bold">${{ item.precio }}</span>
+
+                <div class="cart-item-actions mt-2 d-flex align-items-center">
+
+                    <div class="btn-group btn-group-sm">
+                        <a href="{% url 'restar_del_carrito' item.id %}"
+                            class="btn btn-outline-secondary btn-qty d-flex align-items-center justify-content-center text-decoration-none"
+                            style="width: 28px;">
+                            -
+                        </a>
+
+                        <span class="px-3 border-top border-bottom d-flex align-items-center">
+                            {{ item.cantidad }}
+                        </span>
+
+                        <a href="{% url 'agregar_al_carrito' item.id %}"
+                            class="btn btn-outline-secondary btn-qty d-flex align-items-center justify-content-center text-decoration-none"
+                            style="width: 28px;">
+                            +
+                        </a>
+                    </div>
+
+                    <a href="{% url 'eliminar_item' item.id %}"
+                        class="btn-remove ms-auto text-danger text-decoration-none" title="Eliminar">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+
+                </div>
+            </div>
         </div>
         {% endfor %}
         {% else %}
-        <p class="text-muted">Tu carrito está vacío</p>
+        <div class="text-center mt-5">
+            <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+            <p class="text-muted">Tu carrito está vacío</p>
+            <button type="button" class="btn btn-alma-outline mt-2" data-bs-dismiss="offcanvas">Seguir
+                comprando</button>
+        </div>
         {% endif %}
-
     </div>
 
     <div class="offcanvas-footer p-3 border-top bg-light">
         <div class="d-flex justify-content-between mb-3 align-items-end">
             <span class="text-muted">Total:</span>
             <strong class="fs-4 text-terracota">
-                ${{ total_precio }}
+                ${{ total_precio }} clp
             </strong>
         </div>
 
-        <a href="{% url 'pago' %}">
-            <button class="btn btn-alma-primary w-100 py-2">
+        <a href="{% url 'pago' %}" class="text-decoration-none">
+            <button class="btn btn-alma-primary w-100 py-2" {% if not carrito %}disabled{% endif %}>
                 Finalizar Compra
             </button>
         </a>
     </div>
 </div>
-
 
 <!-- Espacio para compensar navbar fixed -->
 <div style="height: 80px;"></div>

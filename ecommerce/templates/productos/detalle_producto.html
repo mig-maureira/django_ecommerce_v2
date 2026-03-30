@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container py-5" style="margin-top: 80px; min-height: 80vh;">
+
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-decoration-none text-verde">Inicio</a>
+            </li>
+            <li class="breadcrumb-item"><a href="{% url 'index' %}#productos"
+                    class="text-decoration-none text-verde">Productos</a></li>
+            <li class="breadcrumb-item active text-muted" aria-current="page">{{ producto.nombre }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5 align-items-center">
+        <div class="col-md-6 text-center">
+            <div class="position-relative d-inline-block">
+                {% if producto.imagen %}
+                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid"
+                    style="border-radius: 20px; box-shadow: 15px 15px 0px var(--color-verde-oliva); width: 100%; max-width: 450px; object-fit: cover; aspect-ratio: 4/5;">
+                {% else %}
+                <img src="https://placehold.co/450x560?text=Cosmetica+Natural" alt="Sin imagen" class="img-fluid"
+                    style="border-radius: 20px; box-shadow: 15px 15px 0px var(--color-verde-oliva); width: 100%; max-width: 450px; object-fit: cover; aspect-ratio: 4/5;">
+                {% endif %}
+
+                <span class="category-tag position-absolute"
+                    style="top: 20px; left: -10px; background-color: var(--color-terracota);">
+                    {{ producto.categoria.nombre|default:"Cosmética Natural" }}
+                </span>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <span class="section-subtitle mb-2">Esencia Botánica</span>
+            <h1 class="display-4 mb-3"
+                style="color: var(--color-texto); font-weight: bold; font-family: var(--font-titulo);">
+                {{ producto.nombre }}
+            </h1>
+
+            <div class="mb-4 d-flex align-items-center">
+                <span class="fs-2 fw-bold text-terracota me-4">${{ producto.precio }} CLP</span>
+
+                {% if producto.disponible %}
+                <span class="badge bg-verde align-middle"
+                    style="font-size: 0.85rem; padding: 8px 15px; border-radius: 20px;">
+                    <i class="fas fa-check-circle me-1"></i> En Stock
+                </span>
+                {% else %}
+                <span class="badge bg-secondary align-middle"
+                    style="font-size: 0.85rem; padding: 8px 15px; border-radius: 20px;">
+                    <i class="fas fa-times-circle me-1"></i> Sin Stock
+                </span>
+                {% endif %}
+            </div>
+
+            <p class="lead mb-4" style="line-height: 1.8; color: var(--color-texto);">
+                {{ producto.descripcion }}
+            </p>
+
+            <div class="mb-5 p-4 bg-white rounded shadow-sm" style="border: 1px solid rgba(0,0,0,0.05);">
+                <ul class="list-unstyled mb-0 text-muted small d-flex flex-column gap-3">
+                    <li><i class="fas fa-leaf text-verde me-3 fs-5 align-middle"></i> Ingredientes 100% naturales y
+                        seguros.</li>
+                    <li><i class="fas fa-paw text-verde me-3 fs-5 align-middle"></i> Libre de crueldad animal
+                        (Cruelty-Free).</li>
+                    <li><i class="fas fa-recycle text-verde me-3 fs-5 align-middle"></i> Envase eco-amigable y
+                        reciclable.</li>
+                </ul>
+            </div>
+
+            <div class="d-grid gap-3 d-sm-flex">
+                {% if producto.disponible %}
+                <a href="{% url 'agregar_al_carrito' producto.id %}"
+                    class="btn btn-alma-primary px-4 py-3 text-uppercase fw-bold d-flex justify-content-center align-items-center"
+                    style="letter-spacing: 1px;">
+                    <i class="fas fa-shopping-bag me-2"></i> Añadir al Carrito
+                </a>
+                {% else %}
+                <button
+                    class="btn btn-secondary px-4 py-3 text-uppercase fw-bold d-flex justify-content-center align-items-center"
+                    disabled style="border-radius: 30px; letter-spacing: 1px;">
+                    Agotado Temporalmente
+                </button>
+                {% endif %}
+
+                <a href="{% url 'index' %}#productos"
+                    class="btn btn-alma-outline px-4 py-3 text-uppercase fw-bold d-flex justify-content-center align-items-center"
+                    style="letter-spacing: 1px;">
+                    Volver
+                </a>
+            </div>
+
+            <hr class="my-4" style="border-color: #e0e0e0;">
+            <p class="small text-muted mb-0"><i class="fas fa-truck text-terracota me-2"></i> Envíos a todo Chile en
+                24-48 hrs.</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
