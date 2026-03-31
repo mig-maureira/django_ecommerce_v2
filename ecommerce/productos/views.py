@@ -4,6 +4,7 @@ from .forms import ProductoForm
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Producto
+from django.contrib import messages
 
 
 @permission_required("productos.puede_publicar_producto", raise_exception=True)
@@ -29,6 +30,7 @@ def editar_producto(request, pk):
         form = ProductoForm(request.POST, request.FILES, instance=producto)
         if form.is_valid():
             form.save()
+
             return redirect("mis_productos")
     else:
         form = ProductoForm(instance=producto)
@@ -76,7 +78,7 @@ def agregar_al_carrito(request, producto_id):
 
     request.session["carrito"] = carrito
     request.session.modified = True
-
+    messages.success(request, "producto agregado con exito")
     return redirect(request.META.get("HTTP_REFERER", "/"))
 
 
@@ -91,7 +93,7 @@ def restar_del_carrito(request, producto_id):
 
     request.session["carrito"] = carrito
     request.session.modified = True
-
+    messages.warning(request, "Producto eliminado con exito")
     return redirect(request.META.get("HTTP_REFERER", "/"))
 
 
@@ -113,6 +115,7 @@ def eliminar_item(request, producto_id):
 
     request.session["carrito"] = carrito
     request.session.modified = True
+    messages.warning(request, "Producto eliminado con exito")
 
     return redirect(request.META.get("HTTP_REFERER", "/"))
 
@@ -147,6 +150,11 @@ def pago(request):
     request.session.modified = True
 
     return response
+
+
+def confirmacion(request):
+    messages.success(request, "¡Compra Realizada con exito!")
+    return render(request, "pago.html")
 
 
 def detalle_producto(request, id):

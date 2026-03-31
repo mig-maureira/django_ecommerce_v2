@@ -22,4 +22,5 @@ urlpatterns = [
         "carrito/eliminar/<int:producto_id>/", views.eliminar_item, name="eliminar_item"
     ),
     path("producto/<int:id>/", views.detalle_producto, name="detalle_producto"),
+    path("confirmacion/", views.confirmacion, name="confirmacion"),
 ]

@@ -1,46 +1,84 @@
-# django_ecommerce_v20
-## 🛠️ Instalación y Configuración Local
+# Proyecto E-commerce - Django
 
-1.  **Clonar el repositorio:**
+Este proyecto es una plataforma de comercio electrónico desarrollada con **Django**. Incluye un sistema completo de gestión de productos, un carrito de compras basado en sesiones, registro de usuarios con perfiles extendidos y un formulario de contacto dinámico.
+
+---
+
+## 1. Motor de Base de Datos Utilizado
+
+El proyecto utiliza **PostgreSQL** como motor de base de datos robusto, ejecutándose a través de un contenedor **Docker**.
+
+- **Motor (Engine):** `django.db.backends.postgresql`
+- **Nombre de la Base de Datos:** `alma`
+- **Usuario:** `postgres`
+- **Host:** `localhost`
+- **Puerto:** `5433` (Mapeado en Docker)
+
+---
+
+## 2. Descripción del Modelo de Datos
+
+La arquitectura de datos está organizada en tres aplicaciones principales, utilizando el ORM de Django para todas las operaciones:
+
+### Aplicación `productos`
+
+- **Producto:** Gestiona el inventario de la tienda.
+  - `vendedor`: Relación `ForeignKey` con el usuario.
+  - `nombre`, `descripcion`, `precio` e `imagen`.
+  - `disponible`: Booleano para control de stock visual.
+
+### Aplicación `login_app`
+
+- **Profile (Perfil):** Extensión del modelo `User` nativo mediante `OneToOneField`.
+  - Almacena `imagen` de perfil, `direccion`, `ciudad` y `telefono`.
+
+### Aplicación `contacto`
+
+- **Contacto:** Registra los mensajes de usuarios desde la Landing Page.
+  - Almacena `nombre`, `correo` y el `mensaje` enviado.
+
+---
+
+## 3. Rutas Principales del Módulo de Administración
+
+El panel administrativo de Django permite una gestión integral de los datos.
+
+- **URL de Acceso:** `http://127.0.0.1:8000/admin/`
+- **Modelos Registrados:** \* `Producto` (en la app productos).
+  - `Profile` (en la app login_app).
+  - `User/Groups` (gestión de permisos nativa).
+
+---
+
+## 4. Pasos para Ejecutar el Proyecto
+
+Siga estos pasos para configurar el entorno de desarrollo:
+
+1.  **Levantar Base de Datos (Docker):**
+    Asegúrese de que su contenedor de PostgreSQL esté activo en el puerto `5433`.
+
+2.  **Instalar Dependencias:**
 
     ```bash
-    git clone https://github.com/mig-maureira/django_ecommerce_v2.git
-    cd ecommerce
+    pip install django pillow psycopg2-binary
     ```
 
-2.  **Crear y activar un entorno virtual:**
-
-    ```bash
-    python -m venv venv
-
-    # En Windows:
-    venv\Scripts\activate
-    # En macOS/Linux:
-    source venv/bin/activate
-    ```
-
-3.  **Instalar dependencias:**
-    Utiliza el archivo de requerimientos para instalar todas las librerías necesarias con sus versiones exactas:
-
-    ```bash
-    pip install -r requeriments.txt
-    ```
-
-    _(Nota: El archivo está nombrado como `requeriments.txt`, asegúrate de usar ese nombre en el comando)._
-
-4.  **Configurar la base de datos:**
-    Abre tu gestor de PostgreSQL (como pgAdmin o la terminal) y crea una base de datos llamada `libreria`.
-
-5.  **Aplicar migraciones:**
-    Genera y aplica las tablas necesarias en la base de datos:
+3.  **Realizar Migraciones:**
 
     ```bash
     python manage.py makemigrations
     python manage.py migrate
     ```
 
-6.  **Ejecutar el servidor de desarrollo:**
+4.  **Crear Superusuario (Opcional para Admin):**
+
+    ```bash
+    python manage.py createsuperuser
+    ```
+
+5.  **Ejecutar Servidor:**
     ```bash
     python manage.py runserver
     ```
-    El proyecto estará disponible en `http://localhost:8000/`.
+
+---

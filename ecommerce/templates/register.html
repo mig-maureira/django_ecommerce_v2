@@ -4,7 +4,7 @@
 {% block content %}
 
 <section class="hero-section d-flex align-items-center" id="inicio"
-  style="background-image: url('{% static 'img/img_1.jpg' %}'); min-height: 100vh; background-size: cover; background-position: center;">
+  style=" min-height: 100vh; background-size: cover; background-position: center;">
 
   <div class="hero-overlay w-100">
     <div class="container">
@@ -21,6 +21,15 @@
                 <div class="registration-form-container">
                   {{ form.as_p }}
                 </div>
+                {% if messages %}
+                <div class="contenedor-mensajes">
+                  {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                  </div>
+                  {% endfor %}
+                </div>
+                {% endif %}
 
                 <button type="submit" class="btn btn-primary w-100 py-2 mt-3 fw-bold shadow-sm">
                   Registrarme
